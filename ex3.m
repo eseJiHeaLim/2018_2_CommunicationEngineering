@@ -1,0 +1,14 @@
+clear;clc;
+load rpdata z;
+figure;
+histogram(z, 'Normalization', 'pdf');
+m = mean(z); s = std(z);
+x = linspace(min(z), max(z), 100);
+p = pdf('Normal', x, m, s);
+xlabel('$z$', 'Interpreter','latex');
+hold on; grid on;
+plot( x, p, 'r-', 'LineWidth', 2 );
+L = legend('Measured PDF of $z$','$N(\mu,\sigma)$');
+L.Interpreter = 'latex'; L.Box = 'off';
+text(2.2, 0.240, '$\mu = -0.0983$','Interpreter','latex');
+text(2.2, 0.225, '$\sigma = 1.3369$','Interpreter','latex');
