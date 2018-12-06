@@ -93,43 +93,66 @@ grid on;
 %% num7
 clear;clc;
 
-fs = 10000;
+fs = 100;
 ts = 1/fs;
 t = (0:ts:3);
 s = sawtooth(2*pi*(t))/2;
-% plot(t,s)
+figure;
+plot(t,s)
+hold on
 % dsb-am 변조
-x=s.*cos(2*pi*4*t');
+x=s.*cos(2*pi*4*t);
 % 
 xlabel('time $t$ (sec)','Interpreter','latex');
-% 
+%
 plot(t,x)
-% spectrogram(x,512,256,512,Fs)
-% spectrogram(x(1,:),512,256,512,Fs,'yaxis')
 
+%% num8
+Fs = 10000;
+Ts = 1/Fs; % sampling frequency, period
+fc = 4; % carrier frequency
+
+t = -3:Ts:3; % time
+
+m=cos(2*pi*t)/2
+mm=abs(m)
+m=mm-m
+% plot(t,mm-m)
+% m = sawtooth(2*pi*(t))/2; % message signal
+
+c = cos(2*pi*fc*t); % carrier signal
+% modulation index: 1, 0.5, 0.2
+X = (1+m).*c
+mn=X/max(abs(X))
+
+figure; plot(t, mn);
+hold on; 
 
 %% num 9
 
-fs = 10000;
-ts = 1/fs;
-t = (0:ts:3);
-% x = t>=0;
-m = sawtooth(2*pi*10*(t-0.05));
+Fs=48e3;Ts=1/Fs;fc=8e3;  
+%%circle  
+t0=-1:Ts:1;  
+r=4e3;  
+f1=sqrt(r^2*(1-t0.^2));
 
-% 순간 주파수 구하기
-
-x   = cos(2*pi*4000*t);
-
-figure(1);
-%  spectrogram(x, 512, 256, 256, Fs, 'yaxis' );
-
-fi  = 200 + 50*cos(0.2*pi*t);
-figure(2);
-plot( t, fi, 'LineWidth', 2 ); grid on;
-xlabel('time $t$ (sec)', 'Interpreter', 'latex');
-ylabel('frequency $f_i$ (Hz)', 'Interpreter', 'latex');
-ylim([0 500]);
-
+% plot (t0,f1)
+p1=cumsum(f1)*Ts;
+%freqtophase 
+s1=cos(2*pi*fc*t0+2*pi*p1);
+%upperhalfcircle 
+s2=cos(2*pi*fc*t0-2*pi*p1);
+%lowerhalfcircle  
+% plot(t0,s1)
+s=s1+s2;
+%fullcircle  
+%%lines  
+t1=0:Ts:1;  
+c=cos(2*pi*fc*t1)+cos(2*pi*fc*t1);  
+%%line-circle-line  
+x=[2*c,s,2*c]; 
+%%Instantaneousfrequencyplot  
+spectrogram(x,512,256,512,Fs,'yaxis')
 
 %% p14 코드
 T = 1/10;
